@@ -21,10 +21,12 @@ public class CrawlerAgent : Agent
         "During inference, VariableSpeed agents will modify their behavior based on this value " +
         "whereas the CrawlerDynamic & CrawlerStatic agents will run at the speed specified during training "
     )]
+
     //The walking speed to try and achieve
     private float m_TargetWalkingSpeed = m_maxWalkingSpeed;
 
     const float m_maxWalkingSpeed = 15; //The max walking speed
+    private Vector3 previousPosition;
 
     //The current target walking speed. Clamped because a value of zero will cause NaNs
     public float TargetWalkingSpeed
@@ -69,6 +71,7 @@ public class CrawlerAgent : Agent
 
     public override void Initialize()
     {
+        previousPosition = body.position;
         SpawnTarget(TargetPrefab, transform.position); //spawn target
 
         m_OrientationCube = GetComponentInChildren<OrientationCubeController>();
@@ -229,6 +232,11 @@ public class CrawlerAgent : Agent
         // b. Rotation alignment with target direction.
         //This reward will approach 1 if it faces the target direction perfectly and approach zero as it deviates
         var lookAtTargetReward = (Vector3.Dot(cubeForward, body.forward) + 1) * .5F;
+        float distanceTravelled = Vector3.Distance(body.position, previousPosition);
+
+        AddReward(distanceTravelled * 0.01f);
+
+        previousPosition = body.position;
 
         AddReward(matchSpeedReward * lookAtTargetReward);
     }
