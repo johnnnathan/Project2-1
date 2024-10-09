@@ -32,6 +32,7 @@ public class Ball3DAgent : Agent
         }
     }
 
+
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         var actionZ = 2f * Mathf.Clamp(actionBuffers.ContinuousActions[0], -1f, 1f);
@@ -48,16 +49,23 @@ public class Ball3DAgent : Agent
         {
             gameObject.transform.Rotate(new Vector3(1, 0, 0), actionX);
         }
+
+        // Calculate distance between agent and the ball
+        float distanceToBall = Vector3.Distance(ball.transform.position, gameObject.transform.position);
+
+        // Check if the ball is out of bounds
         if ((ball.transform.position.y - gameObject.transform.position.y) < -2f ||
             Mathf.Abs(ball.transform.position.x - gameObject.transform.position.x) > 3f ||
             Mathf.Abs(ball.transform.position.z - gameObject.transform.position.z) > 3f)
         {
-            SetReward(-1f);
+            SetReward(-1f);  // Penalty for failure (ball out of bounds)
             EndEpisode();
         }
         else
         {
-            SetReward(0.1f);
+            // Dynamic reward based on proximity to the ball (closer gives higher reward)
+            float proximityReward = Mathf.Clamp(1.0f / distanceToBall, 0.01f, 1f);
+            SetReward(proximityReward);
         }
     }
 
