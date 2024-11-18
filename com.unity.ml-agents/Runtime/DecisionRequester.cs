@@ -19,7 +19,6 @@ namespace Unity.MLAgents
     /// </remarks>
     [AddComponentMenu("ML Agents/Decision Requester", (int)MenuGroup.Default)]
     [RequireComponent(typeof(Agent))]
-    [DefaultExecutionOrder(-10)]
     public class DecisionRequester : MonoBehaviour
     {
         /// <summary>
@@ -29,17 +28,6 @@ namespace Unity.MLAgents
         [Tooltip("The frequency with which the agent requests a decision. A DecisionPeriod " +
             "of 5 means that the Agent will request a decision every 5 Academy steps.")]
         public int DecisionPeriod = 5;
-
-        /// <summary>
-        /// Indicates when to requests a decision. By changing this value, the timing of decision
-        /// can be shifted even among agents with the same decision period. The value can be
-        /// from 0 to DecisionPeriod - 1.
-        /// </summary>
-        [Range(0, 19)]
-        [Tooltip("Indicates when to requests a decision. By changing this value, the timing " +
-            "of decision can be shifted even among agents with the same decision period. " +
-            "The value can be from 0 to DecisionPeriod - 1.")]
-        public int DecisionStep = 0;
 
         /// <summary>
         /// Indicates whether or not the agent will take an action during the Academy steps where
@@ -64,7 +52,6 @@ namespace Unity.MLAgents
 
         internal void Awake()
         {
-            Debug.Assert(DecisionStep < DecisionPeriod, "DecisionStep must be between 0 and DecisionPeriod - 1.");
             m_Agent = gameObject.GetComponent<Agent>();
             Debug.Assert(m_Agent != null, "Agent component was not found on this gameObject and is required.");
             Academy.Instance.AgentPreStep += MakeRequests;
@@ -119,7 +106,7 @@ namespace Unity.MLAgents
         /// <returns></returns>
         protected virtual bool ShouldRequestDecision(DecisionRequestContext context)
         {
-            return context.AcademyStepCount % DecisionPeriod == DecisionStep;
+            return context.AcademyStepCount % DecisionPeriod == 0;
         }
 
         /// <summary>
