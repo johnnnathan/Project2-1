@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Policies;
-
+using Unity.MLAgents.Sensors;
 public enum Team
 {
     Blue = 0,
@@ -18,7 +18,7 @@ public class AgentSoccer : Agent
     // * wall
     // * own teammate
     // * opposing player
-
+    private RayPerceptionSensorComponent3D raySensor;
     public enum Position
     {
         Striker,
@@ -93,10 +93,24 @@ public class AgentSoccer : Agent
         agentRb.maxAngularVelocity = 500;
 
         m_ResetParams = Academy.Instance.EnvironmentParameters;
+
+
+        Debug.Log($"Listing all components on {gameObject.name}:");
+
+        // Get all components attached to this GameObject
+        Component[] components = GetComponents<Component>();
+
+        // Loop through each component and log its type
+        foreach (Component component in components)
+        {
+            Debug.Log(component.GetType().Name);
+        }
+        
     }
 
     public void MoveAgent(ActionSegment<int> act)
     {
+
         var dirToGo = Vector3.zero;
         var rotateDir = Vector3.zero;
 
@@ -140,6 +154,20 @@ public class AgentSoccer : Agent
         transform.Rotate(rotateDir, Time.deltaTime * 100f);
         agentRb.AddForce(dirToGo * m_SoccerSettings.agentRunSpeed,
             ForceMode.VelocityChange);
+        if (raySensor == null)
+        {
+            raySensor = GetComponent<RayPerceptionSensorComponent3D>();
+        }
+
+        if (raySensor != null)
+        {
+
+
+            // Rotate the sensor's local transform slightly
+            raySensor.transform.localRotation *= Quaternion.Euler(0f, Random.Range(-25f, 25f), 0f);
+
+
+        }
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
