@@ -20,7 +20,7 @@ public class AgentSoccer : Agent
     // * wall
     // * own teammate
     // * opposing player
-    private RayPerceptionSensorComponent3D raySensor;
+    private Vision raySensor;
     private HearingSensor hearingSensor;
     private MemorySensor memorySensor;
     public enum Position
@@ -127,6 +127,10 @@ public class AgentSoccer : Agent
         {
             Debug.LogError("MemorySensor component not found on the agent.");
         }
+        raySensor = transform.Find("Core")?.GetComponentInChildren<Vision>();
+        if (raySensor == null){
+            Debug.LogError("Vision component not found on the agent.");
+        }
     }
 
     public void MoveAgent(ActionSegment<int> act)
@@ -188,13 +192,13 @@ public class AgentSoccer : Agent
     {
         if (raySensor == null)
         {
-            raySensor = GetComponent<RayPerceptionSensorComponent3D>();
+            raySensor = GetComponent<Vision>();
         }
 
         if (raySensor != null)
         {
 
-
+            
             // Rotate the sensor's local transform slightly
             raySensor.transform.localRotation *= Quaternion.Euler(0f, Random.Range(-25f, 25f), 0f);
         }
@@ -246,6 +250,31 @@ public class AgentSoccer : Agent
                 sensor.AddObservation(0f); // z
             }
         }
+        
+
+        if (raySensor != null)
+        {
+            List<Vector3> visibleObjects = raySensor.GetDetectedObjects();
+
+            foreach (Vector3 position in visibleObjects)
+            {
+                Vector3 relativePosition = position - transform.position;
+
+                sensor.AddObservation(relativePosition.x);
+                sensor.AddObservation(relativePosition.y);
+                sensor.AddObservation(relativePosition.z);
+            }
+
+            // Pad with zeros if fewer objects are detected
+            for (int i = visibleObjects.Count; i < raySensor.maxObjects; i++)
+            {
+                sensor.AddObservation(0f); // x
+                sensor.AddObservation(0f); // y
+                sensor.AddObservation(0f); // z
+            }
+        }
+
+        
 
         if (memorySensor != null)
         {
@@ -253,6 +282,8 @@ public class AgentSoccer : Agent
             //TO DO add observations to the agent
         }
     }
+
+
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
 
