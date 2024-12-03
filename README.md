@@ -132,14 +132,3 @@ git clone --branch release_21 https://github.com/Unity-Technologies/ml-agents.gi
 
 ---
 
-## **License**
-
-This project is licensed under the MIT License.
-
----
-
-## **Contact**
-
-For questions or suggestions, feel free to open an issue or reach out to the contributors.
-
---- 
