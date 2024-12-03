@@ -215,16 +215,22 @@ public class AgentSoccer : Agent
         {
             hearingSensor.CollectNearbyObjects(); // Update detected object positions
         }
+
+        if (raySensor != null){
+            raySensor.GetDetectedObjects();
+        }
     }
 
     //TO DO somehow add visual observations to memory
     public override void CollectObservations(VectorSensor sensor)
     {
+        
         if (sensor == null)
         {
             Debug.LogError("VectorSensor is null in CollectObservations!");
             return;
         }
+
         base.CollectObservations(sensor);
 
         // Add hearing observations
@@ -255,6 +261,7 @@ public class AgentSoccer : Agent
         if (raySensor != null)
         {
             List<Vector3> visibleObjects = raySensor.GetDetectedObjects();
+            memorySensor.AddMemory(visibleObjects);
 
             foreach (Vector3 position in visibleObjects)
             {
@@ -278,8 +285,15 @@ public class AgentSoccer : Agent
 
         if (memorySensor != null)
         {
+            
             List<List<Vector3>> memories = memorySensor.GetMemories();
-            //TO DO add observations to the agent
+            foreach (List<Vector3> obs in memories){
+                foreach (Vector3 item  in obs){
+                sensor.AddObservation(item.x); // x
+                sensor.AddObservation(item.y); // y
+                sensor.AddObservation(item.z); // z
+                }
+            }
         }
     }
 

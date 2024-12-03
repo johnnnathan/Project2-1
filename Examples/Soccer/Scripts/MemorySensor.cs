@@ -4,9 +4,9 @@ using Unity.MLAgents.Sensors;
 
 public class MemorySensor : MonoBehaviour
 {
-    public int memorySize = 10; // Number of memories stored
+    public int memorySize = 10; // Number of observation states stored
     public LayerMask detectableLayers; // Layers to detect (e.g., ball, players, etc.)
-    private List<List<Vector3>> memories = new List<List<Vector3>>();
+    private List<List<Vector3>> memories = new List<List<Vector3>>(); // Stored observations
     
     void Awake()
     {
@@ -16,15 +16,15 @@ public class MemorySensor : MonoBehaviour
         }
     }
     
+    // Remove the last observation and add the current one to the observation list
     public void AddMemory(List<Vector3> obsVector)
     {
-        if (memories.Count >= memorySize)
-        {
-            memories.RemoveAt(0);
-        }
+        
+        memories.RemoveAt(0);
 
         memories.Add(obsVector);
     }
+
 
     public List<List<Vector3>> GetMemories()
     {

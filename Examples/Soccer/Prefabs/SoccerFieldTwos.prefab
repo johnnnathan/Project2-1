@@ -2244,7 +2244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 5
+    VectorObservationSize: 30
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -2339,10 +2339,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0698d63319a276185877cca90baa59a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hearingRadius: 50
+  hearingRadius: 7
   detectableLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 51
   maxObjects: 5
   minMovementThreshold: 0.1
 --- !u!1 &1101518129530804
@@ -2530,7 +2530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 5
+    VectorObservationSize: 30
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -2625,10 +2625,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0698d63319a276185877cca90baa59a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hearingRadius: 50
+  hearingRadius: 7
   detectableLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 51
   maxObjects: 5
   minMovementThreshold: 0.1
 --- !u!1 &1141134673700168
@@ -4062,7 +4062,6 @@ GameObject:
   - component: {fileID: 8555370746322525996}
   - component: {fileID: 8069314548688094593}
   - component: {fileID: 1669387484725091620}
-  - component: {fileID: 285313111767963561}
   - component: {fileID: 138541334658956491}
   m_Layer: 0
   m_Name: Core
@@ -4157,40 +4156,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &285313111767963561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5058686068664164337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bb6b867a41448888c1cd4f99643ad71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SensorName: BlueRayPerceptionSensor
-  m_DetectableTags:
-  - ball
-  - blueGoal
-  - purpleGoal
-  - wall
-  - blueAgent
-  - purpleAgent
-  m_RaysPerDirection: 5
-  m_MaxRayDegrees: 60
-  m_SphereCastRadius: 0.5
-  m_RayLength: 20
-  m_RayLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967291
-  m_ObservationStacks: 3
-  m_AlternatingRayOrder: 1
-  m_UseBatchedRaycasts: 1
-  rayHitColor: {r: 1, g: 0, b: 0, a: 1}
-  rayMissColor: {r: 1, g: 1, b: 1, a: 1}
-  m_StartVerticalOffset: 0.5
-  m_EndVerticalOffset: 0.5
 --- !u!114 &138541334658956491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4203,7 +4168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62cd1c627386f9b588ce95e735801a2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visionRadius: 50
+  visionRadius: 20
   visionAngle: 45
   rayCount: 10
   detectableLayers:
@@ -4222,7 +4187,6 @@ GameObject:
   - component: {fileID: 8733511876166204674}
   - component: {fileID: 1376906688708456197}
   - component: {fileID: 8201700310483831663}
-  - component: {fileID: 7761548284120546644}
   - component: {fileID: 3285031845222897945}
   m_Layer: 0
   m_Name: Core
@@ -4317,40 +4281,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7761548284120546644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5344802352532462663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bb6b867a41448888c1cd4f99643ad71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SensorName: PurpleRayPerceptionSensor
-  m_DetectableTags:
-  - ball
-  - purpleGoal
-  - blueGoal
-  - wall
-  - purpleAgent
-  - blueAgent
-  m_RaysPerDirection: 5
-  m_MaxRayDegrees: 60
-  m_SphereCastRadius: 0.5
-  m_RayLength: 20
-  m_RayLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967291
-  m_ObservationStacks: 3
-  m_AlternatingRayOrder: 1
-  m_UseBatchedRaycasts: 1
-  rayHitColor: {r: 1, g: 0, b: 0, a: 1}
-  rayMissColor: {r: 1, g: 1, b: 1, a: 1}
-  m_StartVerticalOffset: 0.5
-  m_EndVerticalOffset: 0.5
 --- !u!114 &3285031845222897945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4363,12 +4293,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62cd1c627386f9b588ce95e735801a2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visionRadius: 50
+  visionRadius: 20
   visionAngle: 45
   rayCount: 10
   detectableLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 51
   maxObjects: 5
 --- !u!1 &6007240757639156798
 GameObject:
@@ -4560,7 +4490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 5
+    VectorObservationSize: 30
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -4655,10 +4585,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0698d63319a276185877cca90baa59a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hearingRadius: 50
+  hearingRadius: 7
   detectableLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 51
   maxObjects: 5
   minMovementThreshold: 0.1
 --- !u!1 &6442519122303792292
@@ -4761,7 +4691,6 @@ GameObject:
   - component: {fileID: 4092255924368129303}
   - component: {fileID: 5922327984871764951}
   - component: {fileID: 5326905458361073637}
-  - component: {fileID: 9093959320940577603}
   - component: {fileID: 4130718228655296559}
   m_Layer: 0
   m_Name: Core
@@ -4856,40 +4785,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9093959320940577603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6624483451418932065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bb6b867a41448888c1cd4f99643ad71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SensorName: PurpleRayPerceptionSensor
-  m_DetectableTags:
-  - ball
-  - purpleGoal
-  - blueGoal
-  - wall
-  - purpleAgent
-  - blueAgent
-  m_RaysPerDirection: 5
-  m_MaxRayDegrees: 60
-  m_SphereCastRadius: 0.5
-  m_RayLength: 20
-  m_RayLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967291
-  m_ObservationStacks: 3
-  m_AlternatingRayOrder: 1
-  m_UseBatchedRaycasts: 1
-  rayHitColor: {r: 1, g: 0, b: 0, a: 1}
-  rayMissColor: {r: 1, g: 1, b: 1, a: 1}
-  m_StartVerticalOffset: 0.5
-  m_EndVerticalOffset: 0.5
 --- !u!114 &4130718228655296559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4902,12 +4797,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62cd1c627386f9b588ce95e735801a2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visionRadius: 50
+  visionRadius: 20
   visionAngle: 45
   rayCount: 10
   detectableLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 39
   maxObjects: 5
 --- !u!1 &7925489420550093475
 GameObject:
@@ -5260,7 +5155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 5
+    VectorObservationSize: 30
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -5355,10 +5250,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0698d63319a276185877cca90baa59a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hearingRadius: 50
+  hearingRadius: 7
   detectableLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 51
   maxObjects: 5
   minMovementThreshold: 0.1
 --- !u!1 &8673569163220857793
@@ -5539,7 +5434,6 @@ GameObject:
   - component: {fileID: 1532852246255900963}
   - component: {fileID: 4134579631721006421}
   - component: {fileID: 6913846847772169935}
-  - component: {fileID: 2998700613385940888}
   - component: {fileID: 3948149769771849974}
   m_Layer: 0
   m_Name: Core
@@ -5634,40 +5528,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2998700613385940888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9067982622220812870}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bb6b867a41448888c1cd4f99643ad71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SensorName: BlueRayPerceptionSensor
-  m_DetectableTags:
-  - ball
-  - blueGoal
-  - purpleGoal
-  - wall
-  - blueAgent
-  - purpleAgent
-  m_RaysPerDirection: 5
-  m_MaxRayDegrees: 60
-  m_SphereCastRadius: 0.5
-  m_RayLength: 20
-  m_RayLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967291
-  m_ObservationStacks: 3
-  m_AlternatingRayOrder: 1
-  m_UseBatchedRaycasts: 1
-  rayHitColor: {r: 1, g: 0, b: 0, a: 1}
-  rayMissColor: {r: 1, g: 1, b: 1, a: 1}
-  m_StartVerticalOffset: 0.5
-  m_EndVerticalOffset: 0.5
 --- !u!114 &3948149769771849974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5680,10 +5540,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62cd1c627386f9b588ce95e735801a2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visionRadius: 50
+  visionRadius: 20
   visionAngle: 45
   rayCount: 10
   detectableLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 51
   maxObjects: 5
