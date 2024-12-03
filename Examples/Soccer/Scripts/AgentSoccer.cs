@@ -221,7 +221,32 @@ public class AgentSoccer : Agent
         }
     }
 
-    //TO DO somehow add visual observations to memory
+    void OnDrawGizmos()
+{
+    // Draw memory trail with fading colors
+    for (int i = 0; i < memories.Count; i++)
+    {
+        // Calculate alpha based on memory age (older = more transparent)
+        float alpha = 1.0f - ((float)i / memories.Count);
+        Gizmos.color = new Color(1f, 0f, 1f, alpha); // Purple with fading alpha
+        
+        foreach (Vector3 position in memories[i])
+        {
+            // Draw spheres for each remembered position
+            Gizmos.DrawWireSphere(position, 0.5f);
+            
+            // Draw lines connecting consecutive memory points
+            if (i < memories.Count - 1 && memories[i + 1].Count > 0)
+            {
+                foreach (Vector3 nextPos in memories[i + 1])
+                {
+                    Gizmos.DrawLine(position, nextPos);
+                }
+            }
+        }
+    }
+}
+
     public override void CollectObservations(VectorSensor sensor)
     {
         
@@ -300,20 +325,56 @@ public class AgentSoccer : Agent
 
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
-
     {
+        var dirToGo = Vector3.zero;
+        var rotateDir = Vector3.zero;
+        var discreteActions = actionBuffers.DiscreteActions;
+        m_KickPower = 0f;
+        Vision vision = GetComponentInChildren<Vision>();
 
-        if (position == Position.Goalie)
+        // Calculate initial movement direction
+        switch (discreteActions[0])
         {
-            // Existential bonus for Goalies.
-            AddReward(m_Existential);
+            case 1:
+                dirToGo = transform.forward * m_ForwardSpeed;
+                m_KickPower = 1f;
+                break;
+            case 2:
+                dirToGo = transform.forward * -m_ForwardSpeed;
+                break;
         }
-        else if (position == Position.Striker)
+
+        switch (discreteActions[1])
         {
-            // Existential penalty for Strikers
-            AddReward(-m_Existential);
+            case 1:
+                dirToGo += transform.right * m_LateralSpeed;
+                break;
+            case 2:
+                dirToGo += transform.right * -m_LateralSpeed;
+                break;
         }
-        MoveAgent(actionBuffers.DiscreteActions);
+
+        // If movement isn't allowed, project the movement vector onto the nearest allowed direction
+        if (vision != null && dirToGo != Vector3.zero && !vision.IsMovementAllowed(dirToGo))
+        {
+            float angleToForward = Vector3.SignedAngle(dirToGo, transform.forward, Vector3.up);
+            float maxAllowedAngle = vision.visionAngle / 2;
+            float clampedAngle = Mathf.Clamp(angleToForward, -maxAllowedAngle, maxAllowedAngle);
+            dirToGo = Quaternion.Euler(0, clampedAngle, 0) * transform.forward * dirToGo.magnitude;
+        }
+
+        switch (discreteActions[2])
+        {
+            case 1:
+                rotateDir = transform.up * -1f;
+                break;
+            case 2:
+                rotateDir = transform.up * 1f;
+                break;
+        }
+
+        transform.Rotate(rotateDir, Time.deltaTime * 300f);
+        agentRb.AddForce(dirToGo * m_SoccerSettings.agentRunSpeed, ForceMode.VelocityChange);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
