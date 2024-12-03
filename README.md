@@ -39,7 +39,7 @@ To run this project, ensure the following are installed:
 
 #### **Step 1: Clone the Repository**
 ```bash
-git clone https://github.com/YourRepositoryLinkHere.git
+git clone https://github.com/johnnnathan/Project2-1.git
 cd Project2-1
 ```
 
