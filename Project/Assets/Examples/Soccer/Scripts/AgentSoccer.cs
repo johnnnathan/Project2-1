@@ -101,7 +101,7 @@ public class AgentSoccer : Agent
         m_ResetParams = Academy.Instance.EnvironmentParameters;
 
 
-        Debug.Log($"Listing all components on {gameObject.name}:");
+        // Debug.Log($"Listing all components on {gameObject.name}:");
 
         // Get all components attached to this GameObject
         Component[] components = GetComponents<Component>();
@@ -109,7 +109,7 @@ public class AgentSoccer : Agent
         // Loop through each component and log its type
         foreach (Component component in components)
         {
-            Debug.Log(component.GetType().Name);
+            // Debug.Log(component.GetType().Name);
         }
         
     }
@@ -133,54 +133,76 @@ public class AgentSoccer : Agent
         }
     }
 
-    public void MoveAgent(ActionSegment<int> act)
+public void MoveAgent(ActionSegment<int> act)
+{
+    var dirToGo = Vector3.zero;
+    var rotateDir = Vector3.zero;
+    var visionRotateDir = Vector3.zero;
+
+    m_KickPower = 0f;
+
+    var forwardAxis = act[0];
+    var rightAxis = act[1];
+    var rotateAxis = act[2];
+    var visionRotateAxis = act[3];
+
+    // Forward/backward movement
+    switch (forwardAxis)
     {
-
-        var dirToGo = Vector3.zero;
-        var rotateDir = Vector3.zero;
-
-        m_KickPower = 0f;
-
-        var forwardAxis = act[0];
-        var rightAxis = act[1];
-        var rotateAxis = act[2];
-
-        switch (forwardAxis)
-        {
-            case 1:
-                dirToGo = transform.forward * m_ForwardSpeed;
-                m_KickPower = 1f;
-                break;
-            case 2:
-                dirToGo = transform.forward * -m_ForwardSpeed;
-                break;
-        }
-
-        switch (rightAxis)
-        {
-            case 1:
-                dirToGo = transform.right * m_LateralSpeed;
-                break;
-            case 2:
-                dirToGo = transform.right * -m_LateralSpeed;
-                break;
-        }
-
-        switch (rotateAxis)
-        {
-            case 1:
-                rotateDir = transform.up * -1f;
-                break;
-            case 2:
-                rotateDir = transform.up * 1f;
-                break;
-        }
-
-        transform.Rotate(rotateDir, Time.deltaTime * 100f);
-        agentRb.AddForce(dirToGo * m_SoccerSettings.agentRunSpeed,
-            ForceMode.VelocityChange);
-        UpdateSensors();
+        case 1:
+            dirToGo = transform.forward * m_ForwardSpeed;
+            m_KickPower = 1f;
+            break;
+        case 2:
+            dirToGo = transform.forward * -m_ForwardSpeed;
+            break;
     }
+
+    // Lateral movement
+    switch (rightAxis)
+    {
+        case 1:
+            dirToGo = transform.right * m_LateralSpeed;
+            break;
+        case 2:
+            dirToGo = transform.right * -m_LateralSpeed;
+            break;
+    }
+
+    // Body rotation
+    switch (rotateAxis)
+    {
+        case 1:
+            rotateDir = transform.up * -1f;
+            break;
+        case 2:
+            rotateDir = transform.up * 1f;
+            break;
+    }
+
+    // Vision cone rotation
+    switch (visionRotateAxis)
+    {
+        case 1:
+            visionRotateDir = Vector3.up * -1f;
+            break;
+        case 2:
+            visionRotateDir = Vector3.up * 1f;
+            break;
+    }
+
+    // Apply transformations
+    transform.Rotate(rotateDir, Time.deltaTime * 100f); 
+    agentRb.AddForce(dirToGo * m_SoccerSettings.agentRunSpeed, ForceMode.VelocityChange); 
+
+    // Rotate the vision cone
+    Transform visionCone = transform.Find("VisionCone");
+    if (visionCone != null)
+    {
+        visionCone.Rotate(visionRotateDir, Time.deltaTime * 50f); 
+    }
+}
+
 
     private void UpdateSensors()
     {
@@ -235,7 +257,7 @@ public class AgentSoccer : Agent
     // Add hearing observations
     if (hearingSensor != null)
     {
-        Debug.Log("hear collection called");
+        // Debug.Log("hear collection called");
         List<Vector3> positions = hearingSensor.GetObjectPositions();
         memorySensor.AddMemory(positions);
         foreach (Vector3 position in positions)
@@ -299,9 +321,9 @@ public class AgentSoccer : Agent
     }
 
     // Log the number of observations for each sensor
-    Debug.Log($"Hearing sensor observations: {hearingObservations}");
-    Debug.Log($"Ray sensor observations: {rayObservations}");
-    Debug.Log($"Memory sensor observations: {memoryObservations}");
+    // Debug.Log($"Hearing sensor observations: {hearingObservations}");
+    // Debug.Log($"Ray sensor observations: {rayObservations}");
+    // Debug.Log($"Memory sensor observations: {memoryObservations}");
 }
 
 
@@ -321,13 +343,19 @@ public class AgentSoccer : Agent
             // Existential penalty for Strikers
             AddReward(-m_Existential);
         }
+        var objectsDetected = raySensor.GetComponent<Vision>().GetDetectedObjects().Count;
+        AddReward(0.1f * objectsDetected); 
+        float rotationPenalty = Mathf.Abs(actionBuffers.DiscreteActions[3] - 0) * 0.01f;
+        AddReward(-rotationPenalty);    
+
+
         MoveAgent(actionBuffers.DiscreteActions);
     }
-
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var discreteActionsOut = actionsOut.DiscreteActions;
-        //forward
+
+        // Forward/backward
         if (Input.GetKey(KeyCode.W))
         {
             discreteActionsOut[0] = 1;
@@ -336,7 +364,8 @@ public class AgentSoccer : Agent
         {
             discreteActionsOut[0] = 2;
         }
-        //rotate
+
+        // Rotate body
         if (Input.GetKey(KeyCode.A))
         {
             discreteActionsOut[2] = 1;
@@ -345,7 +374,8 @@ public class AgentSoccer : Agent
         {
             discreteActionsOut[2] = 2;
         }
-        //right
+
+        // Lateral movement
         if (Input.GetKey(KeyCode.E))
         {
             discreteActionsOut[1] = 1;
@@ -354,7 +384,18 @@ public class AgentSoccer : Agent
         {
             discreteActionsOut[1] = 2;
         }
+
+        // Rotate vision cone
+        if (Input.GetKey(KeyCode.Z))
+        {
+            discreteActionsOut[3] = 1; // Rotate vision cone left
+        }
+        if (Input.GetKey(KeyCode.C))
+        {
+            discreteActionsOut[3] = 2; // Rotate vision cone right
+        }
     }
+
     /// <summary>
     /// Used to provide a "kick" to the ball.
     /// </summary>
