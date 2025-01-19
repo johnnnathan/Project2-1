@@ -111,7 +111,7 @@ public class AgentSoccer : Agent
         {
             // Debug.Log(component.GetType().Name);
         }
-        
+
     }
 
     private void attachSensors()
@@ -192,14 +192,14 @@ public void MoveAgent(ActionSegment<int> act)
     }
 
     // Apply transformations
-    transform.Rotate(rotateDir, Time.deltaTime * 100f); 
-    agentRb.AddForce(dirToGo * m_SoccerSettings.agentRunSpeed, ForceMode.VelocityChange); 
+    transform.Rotate(rotateDir, Time.deltaTime * 100f);
+    agentRb.AddForce(dirToGo * m_SoccerSettings.agentRunSpeed, ForceMode.VelocityChange);
 
     // Rotate the vision cone
     Transform visionCone = transform.Find("VisionCone");
     if (visionCone != null)
     {
-        visionCone.Rotate(visionRotateDir, Time.deltaTime * 50f); 
+        visionCone.Rotate(visionRotateDir, Time.deltaTime * 50f);
     }
 }
 
@@ -217,11 +217,6 @@ public void MoveAgent(ActionSegment<int> act)
             raySensor = GetComponent<Vision>();
         }
 
-        if (raySensor != null)
-        {
-            // Rotate the sensor's local transform slightly
-            raySensor.transform.localRotation *= Quaternion.Euler(0f, Random.Range(-25f, 25f), 0f);
-        }
 
         if (raySensor != null){
             raySensor.GetDetectedObjects();
@@ -344,9 +339,9 @@ public void MoveAgent(ActionSegment<int> act)
             AddReward(-m_Existential);
         }
         var objectsDetected = raySensor.GetComponent<Vision>().GetDetectedObjects().Count;
-        AddReward(0.1f * objectsDetected); 
+        AddReward(0.1f * objectsDetected);
         float rotationPenalty = Mathf.Abs(actionBuffers.DiscreteActions[3] - 0) * 0.01f;
-        AddReward(-rotationPenalty);    
+        AddReward(-rotationPenalty);
 
 
         MoveAgent(actionBuffers.DiscreteActions);
